@@ -17,7 +17,7 @@ Answer:
 def answer_question(question: str, documents: List[Document], model: OllamaLLM) -> str:
 
     context = "\n\n".join([doc.page_content for doc in documents])
-    prompt = ChatPromptTemplate.from_template()
+    prompt = ChatPromptTemplate.from_template(template)
     chain = prompt | model
 
     return chain.invoke({"question": question, "context": context})
