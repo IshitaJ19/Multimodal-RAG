@@ -1,0 +1,6 @@
+langchain_core==0.3.56
+langchain_community==0.3.23
+langchain_ollama==0.3.2
+unstructured[pdf]==0.17.2
+streamlit==1.44.1
+langchain-chroma==0.2.3
