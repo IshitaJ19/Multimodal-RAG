@@ -4,3 +4,5 @@ langchain_ollama==0.3.2
 unstructured[pdf]==0.17.2
 streamlit==1.44.1
 langchain-chroma==0.2.3
+img2table==1.4.1
+

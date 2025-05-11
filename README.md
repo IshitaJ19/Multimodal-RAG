@@ -12,7 +12,7 @@ This project creates a simple RAG application for multimodal data, particularly 
 2. Download and install [Ollama](https://ollama.com/)
 2. Pull the manifests for Ollama models required in this project by running in the terminal:
     - `ollama pull llama3.2`
-    - `ollama pull gemma3`
+    - `ollama pull gemma3:12b`
 2. Install dependencies:
     - poppler 
     - tesseract
