@@ -1,4 +1,4 @@
-# Multimodal RAG PDF Chatbot
+# PDF insights extractor with multi-modal RAG
 
 This project implements a Retrieval Augmented Generation (RAG) chatbot that can answer questions about PDF documents. It leverages multimodal capabilities to understand not only the text within PDFs but also information contained in images and tables. The application is built using Streamlit for the user interface, Ollama for running local Large Language Models (LLMs), and ChromaDB for vector storage.
 
