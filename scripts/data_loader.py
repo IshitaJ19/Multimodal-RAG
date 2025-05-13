@@ -2,6 +2,7 @@ from typing import Union, List, Tuple
 from pathlib import Path
 import os
 import pandas as pd
+import cv2
 
 from unstructured.partition.pdf import partition_pdf
 from unstructured.partition.utils.constants import PartitionStrategy
@@ -83,6 +84,19 @@ def split_text(text: str) -> List[str]:
     return text_splitter.split_text(text)
 
 
+def convert_to_grayscale(file_path):
+    image = cv2.imread(file_path)
+    # Convert to grayscale
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # Apply binary thresholding
+    _, thresh_image = cv2.threshold(gray_image, 150, 255, cv2.THRESH_BINARY)
+    # Resize the image
+    resized_image = cv2.resize(thresh_image, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_LINEAR)
+    _, im_buf_arr = cv2.imencode(".jpg", resized_image)
+    img_bytes = im_buf_arr.tobytes()
+    return img_bytes
+
+
 def extract_structured_data(tables: List[Element]): 
 
     df_list = []
@@ -96,17 +110,17 @@ def extract_structured_data(tables: List[Element]):
 
         for el in group:
             file_path = el.metadata.image_path
-            print(file_path)
-            doc = Image(file_path)
+
+            processed_img_bytes = convert_to_grayscale(file_path)
+            doc = Image(src=processed_img_bytes)
             # Table extraction
             extracted_tables = doc.extract_tables(ocr=ocr,
                                 implicit_rows=True,
                                 implicit_columns=True,
-                                borderless_tables=False,
-                                min_confidence=50)
-            # if len(extracted_tables) > 1:
-            print(extracted_tables)
-            # assert len(extracted_tables) == 1
+                                borderless_tables=True,
+                                min_confidence=0)
+            
+            assert len(extracted_tables) == 1
             table = extracted_tables[0]
 
             table_headers = extract_table_headers(table)
