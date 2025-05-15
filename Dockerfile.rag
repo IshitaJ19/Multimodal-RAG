@@ -1,0 +1,23 @@
+FROM python:3.11-slim
+
+RUN apt-get update && apt-get install -y curl  build-essential libgl1-mesa-glx libglib2.0-0 python3-venv python3-dev poppler-utils tesseract-ocr
+
+
+RUN curl -Ls https://astral.sh/uv/install.sh | bash
+
+ENV PATH="/root/.local/bin:$PATH" 
+
+WORKDIR /app
+
+COPY requirements.txt ./
+
+RUN uv pip install --system -r requirements.txt 
+
+RUN uv pip uninstall --system opencv-python
+RUN uv pip install --system opencv-contrib-python-headless==4.11.0.86
+# COPY scripts scripts
+# COPY app.py app.py
+
+EXPOSE 8501
+
+CMD ["streamlit", "run", "app.py"]

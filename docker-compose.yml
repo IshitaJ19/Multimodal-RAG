@@ -1,0 +1,56 @@
+services:
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./data/ollama_models:/root/.ollama/models
+    environment:
+      - OLLAMA_SERVER=http://0.0.0.0:11434
+    restart: unless-stopped
+    
+  ollama-puller:
+    image: ollama/ollama
+    container_name: ollama-puller
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    volumes:
+      - ./data/ollama_models:/root/.ollama/models
+      - ./scripts/pull_models.sh:/pull_models.sh
+    entrypoint:
+      [
+        "/bin/bash","-c","chmod +x /pull_models.sh && /pull_models.sh" 
+      ]
+
+  chroma:
+    image: chromadb/chroma:0.6.3
+    container_name: chroma
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data/chroma:/chroma/chroma
+    restart: unless-stopped
+    # environment:
+    #   - IS_PERSISTENT=TRUE
+    #   - PERSIST_DIRECTORY=/chroma/chroma
+
+  streamlit-rag:
+    build: 
+      context: .
+      dockerfile: Dockerfile.rag
+    container_name: streamlit-rag
+    depends_on:
+      - ollama
+    ports:
+      - "8501:8501"  # Streamlit default
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - CHROMA_DB_HOST=http://chroma:8000
+    volumes:
+      - .:/app
+    restart: unless-stopped
+    command: streamlit run app.py --server.port=8501
