@@ -15,7 +15,6 @@ from img2table.ocr import TesseractOCR
 from img2table.document import Image
 from img2table.tables.objects.extraction import ExtractedTable
 
-
 pdfs_dir = Path(__file__).parent.parent / 'data' / 'pdfs'
 figures_dir = Path(__file__).parent.parent / 'data' / 'figures'
 
@@ -77,7 +76,7 @@ def load_pdf(file_path: Union[str, Path], figures_dir: Union[str, Path], model: 
 
 def split_text(text: str) -> List[str]:
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=5000,
+        chunk_size=1000,
         chunk_overlap=200,
         add_start_index=True
     )
