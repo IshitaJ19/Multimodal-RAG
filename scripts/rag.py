@@ -6,7 +6,7 @@ from langchain_ollama.llms import OllamaLLM
 
 template = """
 You are an assistant that is tasked with answering questions.
-Use the following pieces of context to generate an answer.
+Pick the relevant pieces of information from the provided context to formulate your answer to the question.
 If you don't know the answer, just say that you don't know.
 Use at most three sentences and keep the answer concise.
 Question: {question}
